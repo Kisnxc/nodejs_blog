@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/Kisnxc/nodejs_blog#readme",
 
-  
+  "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
-    },
+    }},
    
   
   "dependencies": {
