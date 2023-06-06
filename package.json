@@ -28,7 +28,7 @@
     "hooks": {
       "pre-commit": "lint-staged"
     },
-  
+   
   
   "dependencies": {
     "express": "^4.18.2",
