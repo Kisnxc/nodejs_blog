@@ -1,0 +1,101 @@
+<section class="text-center">
+  <div class="p-5 bg-image" style="
+    background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+    height: 300px;
+  "></div>
+
+  <div class="card mx-4 mx-md-5 shadow-5-strong" style="
+    margin-top: -100px;
+    background: hsla(0, 0%, 100%, 0.8);
+    backdrop-filter: blur(30px);
+  ">
+    <div class="card-body py-5 px-md-5">
+      <div class="row d-flex justify-content-center">
+        <div class="col-lg-8">
+          <h2 class="fw-bold mb-5">Login now</h2>
+          <form>
+            <div class="form-outline mt-4">
+              <input type="email" name="email" id="form3Example3" class="form-control" placeholder="Email address" />
+            </div>
+            <div class="email-error text-danger"></div>
+            <div class="form-outline mt-4">
+              <input type="password" name="password" id="form3Example4" class="form-control" placeholder="Password" />
+            </div>
+            <div class="password-error text-danger"></div>
+            <div class="text-start mt-4">
+              <a href="#!" class="forgot-password-link ">Forgot password?</a>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mb-4">
+              Login
+            </button>
+          </form>
+          <!-- Register buttons -->
+          <div class="text-center">
+            <p>Not a member? <a href="/auth/signup">Register</a></p>
+            <p>or Login with:</p>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+              <i class="fab fa-facebook-f"></i>
+            </button>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+              <i class="fab fa-google"></i>
+            </button>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+              <i class="fab fa-twitter"></i>
+            </button>
+            <button type="button" class="btn btn-link btn-floating mx-1">
+              <i class="fab fa-github"></i>
+            </button>
+          </div>
+          <!-- Register buttons -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+<script>
+  const form = document.querySelector('form');
+  const emailError = document.querySelector('.email-error');
+  const passwordError = document.querySelector('.password-error');
+
+
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    //reset error
+    emailError.textContent = '';
+    passwordError.textContent = '';
+
+    //get value
+    const email = form.email.value;
+    const password = form.password.value;
+
+
+    try {
+      const res = await fetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.errors) {
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+      if (data.user) {
+        //location.assign('/home');
+        const previousPage = document.referrer;
+        window.location.href = previousPage;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  });
+</script>

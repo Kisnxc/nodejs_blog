@@ -1,0 +1,23 @@
+<div class="mt-4">
+    <h3>Edit Idol</h3>
+    <form class="mt-4" method ="post" action="/idols/{{idol._id}}?_method=PUT">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" value="{{idol.name}} " id="name" name="name">       
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea class="form-control"  id="description" name="description">{{idol.description}}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="videoId">Video ID</label>
+            <input type="text" class="form-control" value="{{idol.videoId}}" id="videoId" name="videoId">       
+        </div>
+
+       
+        
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>

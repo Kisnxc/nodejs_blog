@@ -1,0 +1,152 @@
+<form name="container-form" method="POST" action="/idols/handle-form-action" class="mt-4">
+    <div>
+        <h3>My Idols List</h3>
+        <a href="/me/trash/idols">Trash ({{deletedCount}})</a>
+    </div>
+
+    <div class="mt4 d-flex align-items-center">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+            <label class="form-check-label" for="checkbox-all">
+                Choose all
+            </label>
+        </div>
+
+        <select class="form-control form-control-sm checkbox-select-all-options" name="action" required>
+            <option value="">-- Action --</option>
+            <option value="delete">Delete</option>
+
+        </select>
+
+        <button class="btn btn-primary btn-sm btn-check-submit" disabled="disabled">Apply</button>
+    </div>
+
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col" colspan="2">#</th>
+                <th scope="col">
+                    Idol name
+                    {{{sortable 'name' _sort }}}
+                </th>
+                <th scope="col" colspan="2">
+                    Time Created
+                    {{{sortable 'createdAt' _sort }}}
+
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {{#each idols}}
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="idolIds[]" value="{{this._id}}">
+                        </label>
+                    </div>
+                </td>
+                <th scope="row">{{sum @index 1}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.createdAt}}</td>
+                <td>
+                    <a href="/idols/{{this._id}}/edit" class="btn btn-link">Edit</a>
+                    <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
+                        data-target="#delete-course-modal">Delete</a>
+
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    You don't have course here
+                    <a href="/idols/create">Add idol</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</form>
+
+
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete the course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-course" type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="post" action="">
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var idolId;
+        //var containerForm = document.forms['container-form'];
+        var containerForm = $('form[name="container-form"]');
+
+        var deleteForm = document.forms['delete-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+        var checkboxAll = $('#checkbox-all');
+        var idolItemCheckbox = $('input[name="idolIds[]"]');
+        var checkSubmitBtn = $('.btn-check-submit');
+
+
+
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            idolId = button.data('id');
+        })
+
+
+        btnDeleteCourse.onclick = function (event) {
+            deleteForm.action = '/idols/' + idolId + '?_method=delete';
+            deleteForm.submit();
+        }
+
+
+        // Checkbox all change
+        checkboxAll.change(function (event) {
+            var isCheckedAll = $(this).prop('checked');
+            idolItemCheckbox.prop('checked', isCheckedAll);
+            renderCheckSubmitBtn();
+        });
+
+        // Idol Checkbox change
+        idolItemCheckbox.change(function (event) {
+            var isCheckedAll = idolItemCheckbox.length === $('input[name="idolIds[]"]:checked').length;
+            checkboxAll.prop('checked', isCheckedAll);
+            renderCheckSubmitBtn();
+        });
+
+
+
+        // Rerender check apply btn
+        function renderCheckSubmitBtn() {
+            var checkedCount = $('input[name="idolIds[]"]:checked').length;
+            if (checkedCount > 0) {
+                checkSubmitBtn.prop('disabled', false);
+            } else {
+                checkSubmitBtn.prop('disabled', true);
+            }
+        }
+    });
+
+
+</script>

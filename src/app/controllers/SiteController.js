@@ -1,13 +1,29 @@
+const { response } = require('express');
+const Idol = require('../models/Idol');
+const {multipleMongooseToObject} = require('../../util/mongoose');
+
 class SiteController {
     // Get /
-    index(reg, res) {
-        res.render('home');
+    index(req, res, next) {
+
+        Idol.find({})
+            .then((idols) => {   
+                res.render('home', {
+                    idols:multipleMongooseToObject(idols)
+                });
+            }) 
+            .catch(next) ;
+            
+        // res.render('home');
     }
 
     // Get /search
-    search(reg, res) {
+    search(req, res) {
         res.render('search');
     }
+
+    
+
 }
 
 module.exports = new SiteController();

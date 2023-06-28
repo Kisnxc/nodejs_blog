@@ -1,0 +1,161 @@
+<form name="container-form" method="POST" action="/idols/handle-form-action" class="mt-4">
+
+    <div class="mt-4">
+        <div>
+            <h3>My Trash List</h3>
+            <a href="/me/stored/idols">My Idols List ({{listCount}}) </a>
+        </div>
+
+        <div class="mt4 d-flex align-items-center">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                <label class="form-check-label" for="checkbox-all">
+                    Choose all
+                </label>
+            </div>
+
+            <select class="form-control form-control-sm checkbox-select-all-options" name="action" required>
+                <option value="">-- Action --</option>
+                <option value="restore">Restore</option>
+
+            </select>
+
+            <button class="btn btn-primary btn-sm btn-check-submit " disabled>Apply</button>
+        </div>
+
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Idol name</th>
+                    <th scope="col" colspan="2">Time Deleted</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {{#each idols}}
+                <tr>
+                    <td>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="idolIds[]" value="{{this._id}}">
+                            </label>
+                        </div>
+                    </td>
+                    <th scope="row">{{sum @index 1}}</th>
+                    <td>{{this.name}}</td>
+                    <td>{{this.deletedAt}}</td>
+                    <td>
+                        <a href="#" class="btn btn-link btn-restore" data-id="{{this._id}}">Restore</a>
+                        <a href="" class="btn btn-link" data-toggle="modal" data-id="{{this._id}}"
+                            data-target="#delete-course-modal">Move out trash</a>
+
+                    </td>
+                </tr>
+                {{else}}
+                <tr>
+                    <td colspan="5" class="text-center">
+                        The trash empty
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</form>
+
+{{!-- Confirm hidden box --}}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Move out trash the course</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure ?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-course" type="button" class="btn btn-danger">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Delete hidden form --}}
+<form name="delete-course-form" method="post" action=""></form>
+<form name="restore-course-form" method="post" action=""></form>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var idolId;
+        var deleteForm = document.forms['delete-course-form'];
+        var restoreForm = document.forms['restore-course-form'];
+        var btnDeleteCourse = document.getElementById('btn-delete-course');
+        var restoreBtn = $('.btn-restore');
+        var idolItemCheckbox = $('input[name="idolIds[]"]');
+        var checkSubmitBtn = $('.btn-check-submit');
+        var containerForm = $('form[name="container-form"]');
+        var checkboxAll = $('#checkbox-all');
+
+
+
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            idolId = button.data('id');
+
+        })
+
+
+        btnDeleteCourse.onclick = function (event) {
+            deleteForm.action = '/idols/' + idolId + '/force?_method=delete';
+            deleteForm.submit();
+        }
+
+
+
+
+        restoreBtn.click(function (e) {
+            e.preventDefault();
+            var restoreId = $(this).data('id');
+            restoreForm.action = '/idols/' + restoreId + '/restore?_method=PATCH';
+            restoreForm.submit();
+        });
+
+
+        // Choose all change
+        checkboxAll.change(function (event) {
+            var isCheckedAll = $(this).prop('checked');
+            idolItemCheckbox.prop('checked', isCheckedAll);
+            renderCheckSubmitBtn()
+        });
+
+
+        // Idol Checkbox change
+        idolItemCheckbox.change(function (event) {
+            var isCheckedAll = idolItemCheckbox.length === $('input[name="idolIds[]"]:checked').length;
+            checkboxAll.prop('checked', isCheckedAll);
+            renderCheckSubmitBtn()
+        });
+
+        
+
+        // Rerender check apply btn
+        function renderCheckSubmitBtn() {
+            var checkedCount = $('input[name="idolIds[]"]:checked').length;
+            if (checkedCount) {
+                checkSubmitBtn.prop('disabled',false);
+            } else {
+                checkSubmitBtn.prop('disabled',true);
+            }
+        }
+    });
+
+
+
+
+</script>

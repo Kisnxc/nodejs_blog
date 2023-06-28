@@ -1,16 +1,56 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">F8 Education</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <div class="container">
+    <a class="navbar-brand" href="/">My Idol</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <!-- Login link -->
+
+        {{#if user}}
+        <li class="text-center text-success mt-2">Welcome, {{getEmail user}}</li>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto">
+
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <img
+                  src="https://scontent.fsgn13-4.fna.fbcdn.net/v/t39.30808-6/273498626_3254156158152521_6978568010847971994_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=CanTWltJejsAX_6oNOW&_nc_ht=scontent.fsgn13-4.fna&oh=00_AfC75_saE-P_6svceU7GoGSsMb4m7YZzcwVsiA87farCjw&oe=648B2538"
+                  alt="" class="user-avatar">
+                Kisnxc
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/me/stored/idols">Idol List</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/idols/create">Add Idol</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/auth/logout">Log out</a>
+              </div>
+            </li>
+          </ul>
+
+
+        </div>
+        {{else}}
+        <li class="text-danger text-center mt-2">Welcome, Guest</li>
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/login">Login</a>
+        </li>
+
+        <!-- Sign up link -->
+        <li class="nav-item">
+          <a class="nav-link" href="/auth/signup">Sign Up</a>
+        </li>
+
+        {{/if}}
+
+
+      </ul>
+    </div>
+  </div>
 </nav>
